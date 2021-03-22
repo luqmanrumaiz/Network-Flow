@@ -1,34 +1,34 @@
 public class Flow
 {
-    int vertices;
-    int edges;
-    int capacity;
+    private int vertex;
+    private int edge;
+    private int capacity;
 
-    public Flow(int vertices, int edges, int capacity)
+    public Flow(int vertices, int edge, int capacity)
     {
-        this.vertices = vertices;
-        this.edges = edges;
+        this.vertex = vertices;
+        this.edge = edge;
         this.capacity = capacity;
     }
 
-    public int getVertices()
+    public int getVertex()
     {
-        return vertices;
+        return vertex;
     }
 
-    public void setVertices(int vertices)
+    public void setVertex(int vertex)
     {
-        this.vertices = vertices;
+        this.vertex = vertex;
     }
 
-    public int getEdges()
+    public int getEdge()
     {
-        return edges;
+        return edge;
     }
 
-    public void setEdges(int edges)
+    public void setEdge(int edge)
     {
-        this.edges = edges;
+        this.edge = edge;
     }
 
     public int getCapacity()
@@ -40,4 +40,14 @@ public class Flow
     {
         this.capacity = capacity;
     }
+
+    @Override
+    public String toString() {
+        return "\nFlow{" +
+                "vertices=" + vertex +
+                ", edges=" + edge +
+                ", capacity=" + capacity +
+                '}';
+    }
+
 }

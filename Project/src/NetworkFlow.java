@@ -1,20 +1,33 @@
-import java.util.Set;
+import java.util.Arrays;
 
 public class NetworkFlow
 {
-    int source;
-    int target;
-    int numberOfNodes;
-    int maximumFlow;
-    Set<Flow> flows;
+    private int source;
+    private int target;
+    private int numberOfNodes;
+    private Flow[] flows;
 
-    public NetworkFlow(int source, int target, int numberOfNodes, int maximumFlow, Set<Flow> flows)
+    public NetworkFlow(int source, int target, int numberOfNodes, Flow[] flows)
     {
         this.source = source;
         this.target = target;
         this.numberOfNodes = numberOfNodes;
-        this.maximumFlow = maximumFlow;
         this.flows = flows;
+    }
+
+    @Override
+    public String toString() {
+        return "\nNetworkFlow{" +
+                "source=" + source +
+                ", target=" + target +
+                ", numberOfNodes=" + numberOfNodes +
+                ", flows=" + Arrays.toString(flows) +
+                '}';
+    }
+
+    public NetworkFlow()
+    {
+        flows = new Flow[numberOfNodes];
     }
 
     public int getSource()
@@ -47,22 +60,12 @@ public class NetworkFlow
         this.numberOfNodes = numberOfNodes;
     }
 
-    public int getMaximumFlow()
-    {
-        return maximumFlow;
-    }
-
-    public void setMaximumFlow(int maximumFlow)
-    {
-        this.maximumFlow = maximumFlow;
-    }
-
-    public Set<Flow> getFlows()
+    public Flow[] getFlows()
     {
         return flows;
     }
 
-    public void setFlows(Set<Flow> flows)
+    public void setFlows(Flow[] flows)
     {
         this.flows = flows;
     }
