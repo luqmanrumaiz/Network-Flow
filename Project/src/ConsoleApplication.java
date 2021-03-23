@@ -5,15 +5,15 @@ import java.util.*;
 public class ConsoleApplication
 {
     private static NetworkFlow networkFlow;
+    private static final Scanner INPUT = new Scanner(System.in);
 
     public static void main(String[] args) throws FileNotFoundException
     {
-        Scanner input = new Scanner(System.in);
-
         System.out.println("0oo - Welcome to the Network Flow Application - ooO");
 
         boolean run = true;
-        while (run) {
+        while (run)
+        {
             System.out.print(
                     "\nHere below are the Options you can Execute,\n" +
                             "01: Initialize the Flow\n" +
@@ -24,11 +24,12 @@ public class ConsoleApplication
                             "06: Quit Program\n\n" +
                             "Desired Option: ");
 
-            String selectedOption = input.next();
+            String selectedOption = INPUT.next();
             int option = 0;
 
             // Try Catch Block inorder to Validate Input that is not an Integer
-            try {
+            try
+            {
                 option = Integer.parseInt(selectedOption);
 
                 // Printing Error Message if Option is not in range of the available options
@@ -81,17 +82,78 @@ public class ConsoleApplication
         System.out.println("Network Flow: " + networkFlow);
     }
 
-    private static void findMaxFlow()
+    private static void insertFlow()
     {
 
     }
 
+    /**
+     * This Method deletes a Flow from a Network based on User Input
+     */
     private static void deleteFlow()
+    {
+        if (networkFlow != null)
+        {
+            int flowCount = 0;
+            for (Flow flow : networkFlow.getFlows())
+            {
+                System.out.println(flow + " <~ " + flowCount++);
+            }
+
+            System.out.print("\nWhich Flow do You Wish to Remove (Number Based on the Displayed Flows): ");
+            String selectedFlowToDelete = INPUT.next();
+
+            // Try Catch Block inorder to Validate Input that is not an Integer
+            try {
+                int flowToDelete = Integer.parseInt(selectedFlowToDelete);
+
+                // Printing Error Message if Option is not in range of the available Flows
+                if (flowToDelete < 1 || flowToDelete > networkFlow.getNumberOfNodes())
+                {
+                    System.out.println("\nThe Option you have entered is Invalid !!!");
+                }
+                else
+                {
+                    /* Creating a new Flow Array without the Flow the User wishes to remove using an If Condition nested
+                     * in the below For Loop to ignore the index of the removed flow
+                     */
+                    Flow[] updatedFlows = new Flow[networkFlow.getNumberOfNodes() - 1];
+
+                    int index = 0;
+                    for (Flow flow : networkFlow.getFlows())
+                    {
+                        if (index == (flowToDelete - 1))
+                        {
+                            index++;
+                            continue;
+                        }
+                        updatedFlows[index] = flow;
+                        index++;
+                    }
+
+                    networkFlow.setFlows(updatedFlows);
+                    networkFlow.setNumberOfNodes(networkFlow.getNumberOfNodes() - 1);
+                }
+            }
+            catch (Exception exception)
+            {
+                System.out.println("\nYou have not entered a Number !!!");
+            }
+        }
+        else System.out.println("The Network Flow has not been Initialized !!!");
+    }
+
+    private static void searchFlow()
     {
 
     }
 
     private static void editFlowCapacity()
+    {
+
+    }
+
+    private static void findMaxFlow()
     {
 
     }

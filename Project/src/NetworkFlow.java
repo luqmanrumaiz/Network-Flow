@@ -67,6 +67,6 @@ public class NetworkFlow
 
     public void setFlows(Flow[] flows)
     {
-        this.flows = flows;
+        this.flows = flows.clone();
     }
 }
