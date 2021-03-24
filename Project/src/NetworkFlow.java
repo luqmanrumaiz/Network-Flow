@@ -15,16 +15,6 @@ public class NetworkFlow
         this.flows = flows;
     }
 
-    @Override
-    public String toString() {
-        return "\nNetworkFlow{" +
-                "source=" + source +
-                ", target=" + target +
-                ", numberOfNodes=" + numberOfNodes +
-                ", flows=" + Arrays.toString(flows) +
-                '}';
-    }
-
     public NetworkFlow()
     {
         flows = new Flow[numberOfNodes];
@@ -68,5 +58,13 @@ public class NetworkFlow
     public void setFlows(Flow[] flows)
     {
         this.flows = flows.clone();
+    }
+
+    @Override
+    public String toString() {
+        return "Source: " + source +
+                "\nTarget:" + target +
+                "\nNumber Of Nodes: " + numberOfNodes +
+                "\nFlows: " + Arrays.toString(flows);
     }
 }

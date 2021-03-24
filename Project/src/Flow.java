@@ -44,9 +44,9 @@ public class Flow
     @Override
     public String toString() {
         return "\nFlow{" +
-                "vertices=" + vertex +
-                ", edges=" + edge +
-                ", capacity=" + capacity +
+                "Vertices: " + vertex +
+                ", Edges: " + edge +
+                ", Capacity: " + capacity +
                 '}';
     }
 
