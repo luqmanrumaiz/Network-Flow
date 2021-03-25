@@ -135,7 +135,8 @@ public class ConsoleApplication
         String selectedFlowToDelete = INPUT.next();
 
         // Try Catch Block inorder to Validate Input that is not an Integer
-        try {
+        try
+        {
             int flowToDelete = Integer.parseInt(selectedFlowToDelete);
 
             // Printing Error Message if Option is not in range of the available Flows
@@ -181,15 +182,63 @@ public class ConsoleApplication
 
     private static void editFlowCapacity()
     {
+        // Printing the available Flows to Delete
+        int flowCount = 1;
+        for (Flow flow : networkFlow.getFlows())
+        {
+            System.out.println(flow + " <~ " + flowCount++);
+        }
+
+        System.out.print("\nWhich Flow do You Wish to Remove (Number Based on the Displayed Flows): ");
+        String selectedFlowToModify = INPUT.next();
+
+        // Try Catch Block inorder to Validate Input that is not an Integer
+        try
+        {
+            int flowToModify = Integer.parseInt(selectedFlowToModify);
+
+            // Printing Error Message if Option is not in range of the available Flows
+            if (flowToModify < 1 || flowToModify > networkFlow.getNumberOfNodes())
+            {
+                System.out.println("\nThe Flow that you have selected does not exist !!!");
+            }
+            else
+            {
+                /* Creating a new Flow Array without the Flow the User wishes to remove using an If Condition nested
+                 * in the below For Loop to ignore the index of the removed flow
+                 */
+                Flow[] updatedFlows = new Flow[networkFlow.getNumberOfNodes() - 1];
+
+                int index = 0;
+                int count = 0;
+                for (Flow flow : networkFlow.getFlows())
+                {
+                    if (count == (flowToModify - 1))
+                    {
+                        count++;
+                        continue;
+                    }
+                    updatedFlows[index] = flow;
+                    index++;
+                    count++;
+                }
+
+                networkFlow.setFlows(updatedFlows);
+                networkFlow.setNumberOfNodes(networkFlow.getNumberOfNodes() - 1);
+            }
+        }
+        catch (Exception exception)
+        {
+            System.out.println("\nYou have not entered a Number !!!");
+        }
 
     }
 
     private static void findMaxFlow()
     {
-
     }
 
-    private static void viewNetworkFlow()
+    private static void viewNetworkFlow ()
     {
 
     }

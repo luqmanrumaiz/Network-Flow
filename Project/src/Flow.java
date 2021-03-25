@@ -3,6 +3,7 @@ public class Flow
     private int vertex;
     private int edge;
     private int capacity;
+    private int currentFlow;
 
     public Flow(int vertices, int edge, int capacity)
     {
@@ -11,9 +12,17 @@ public class Flow
         this.capacity = capacity;
     }
 
-    public int getVertex()
+    public Flow(int vertices, int edge, int capacity, int currentFlow)
     {
-        return vertex;
+        this.vertex = vertices;
+        this.edge = edge;
+        this.capacity = capacity;
+        this.currentFlow = currentFlow;
+    }
+
+    public void setCurrentFlow(int currentFlow)
+    {
+        this.currentFlow = currentFlow;
     }
 
     public void setVertex(int vertex)
@@ -39,6 +48,16 @@ public class Flow
     public void setCapacity(int capacity)
     {
         this.capacity = capacity;
+    }
+
+    public int getVertex()
+    {
+        return vertex;
+    }
+
+    public int getCurrentFlow()
+    {
+        return currentFlow;
     }
 
     @Override
