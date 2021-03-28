@@ -2,40 +2,40 @@ import java.util.Arrays;
 
 public class NetworkFlow
 {
-    private int source;
-    private int target;
+    private String source;
+    private String target;
     private int numberOfNodes;
-    private Flow[] flows;
+    private Edge[] edges;
 
-    public NetworkFlow(int source, int target, int numberOfNodes, Flow[] flows)
+    public NetworkFlow(String source, String target, int numberOfNodes, Edge[] edges)
     {
         this.source = source;
         this.target = target;
         this.numberOfNodes = numberOfNodes;
-        this.flows = flows;
+        this.edges = edges;
     }
 
     public NetworkFlow()
     {
-        flows = new Flow[numberOfNodes];
+        edges = new Edge[numberOfNodes];
     }
 
-    public int getSource()
+    public String getSource()
     {
         return source;
     }
 
-    public void setSource(int source)
+    public void setSource(String source)
     {
         this.source = source;
     }
 
-    public int getTarget()
+    public String getTarget()
     {
         return target;
     }
 
-    public void setTarget(int target)
+    public void setTarget(String target)
     {
         this.target = target;
     }
@@ -50,21 +50,21 @@ public class NetworkFlow
         this.numberOfNodes = numberOfNodes;
     }
 
-    public Flow[] getFlows()
+    public Edge[] getEdges()
     {
-        return flows;
+        return edges;
     }
 
-    public void setFlows(Flow[] flows)
+    public void setEdges(Edge[] edges)
     {
-        this.flows = flows.clone();
+        this.edges = edges;
     }
 
     @Override
     public String toString() {
-        return "Source: " + source +
-                "\nTarget:" + target +
+        return "\nSource: " + source +
+                "\nTarget: " + target +
                 "\nNumber Of Nodes: " + numberOfNodes +
-                "\nFlows: " + Arrays.toString(flows);
+                "\nEdges (Capacity (Vertex One, Vertex Two) ) : " + Arrays.toString(edges);
     }
 }
