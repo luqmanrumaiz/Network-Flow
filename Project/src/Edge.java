@@ -86,8 +86,6 @@ public class Edge
     @Override
     public String toString()
     {
-        return "\n" + vertexOne + " ~> " + vertexTwo +
-                " | , Capacity=" + capacity +
-                " |, Flow=" + flow;
+        return vertexOne + " ~> " + vertexTwo + " | Capacity=" + capacity + " | Flow=" + flow;
     }
 }

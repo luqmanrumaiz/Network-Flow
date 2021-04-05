@@ -172,7 +172,63 @@ public class ConsoleApplication
      */
     private static void deleteEdge()
     {
-        System.out.print(" ");
+        int edgeCount = 0;
+
+        System.out.print("\nVertex One in Edge to Delete: ");
+        String vertexOneInEdge = INPUT.next();
+
+        System.out.print("Vertex Two in Edge to Delete: ");
+        String vertexTwoInEdge = INPUT.next();
+
+        int vertexOne;
+        int vertexTwo;
+
+        // Try Catch Block inorder to Validate Input that is not an Integer
+        try
+        {
+            vertexOne = Integer.parseInt(vertexOneInEdge);
+            vertexTwo = Integer.parseInt(vertexTwoInEdge);
+
+
+            // Printing Error Message if Option is not in range of the available options
+            if ( ( vertexOne < networkFlow.getSource() ) || ( vertexTwo > networkFlow.getTarget() ) )
+
+                System.out.println("\nThe Option you have entered is Invalid !!!");
+
+            else
+            {
+                boolean edgeRemoved = false;
+
+                for (Vertex vertex : networkFlow.getVertices())
+                {
+                    // Not Using an Enhanced For Loop as when an Edge is removed an error occurs, this was not faced in an Iteration Loop
+                    for (int adjacentEdgeCount = 0; adjacentEdgeCount < vertex.getAdjacentEdges().size() ; adjacentEdgeCount ++) {
+
+                        Edge edge = vertex.getAdjacentEdges().get(adjacentEdgeCount);
+
+                        if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
+
+                            if (vertex.removeEdge(edge))
+
+                                edgeRemoved = true;
+                    }
+                }
+
+                if (edgeRemoved)
+
+                    System.out.println("\nThe Edge has been Successfully removed !");
+                else
+
+                    System.out.println("\nThe Edge was not Found !!! ");
+            }
+
+        }
+        catch (Exception exception)
+        {
+            System.out.println("\nYou have not entered a Number !!!");
+        }
+
+
     }
 
     private static void editFlowCapacity()
@@ -188,18 +244,27 @@ public class ConsoleApplication
     {
         long timeStart = System.nanoTime();
 
-        System.out.println("Maximum Flow: " + networkFlow.getMaxFlow());
+        System.out.println("\nMaximum Flow: " + networkFlow.getMaxFlow());
 
         long timeEnd = System.nanoTime();
 
         // Subtracting the Time recorded at the start of executing this method with the time recorded after executing
         System.out.println("Time Elapsed: " + (timeEnd - timeStart) + " ns");
-
     }
 
 
     private static void viewNetworkFlow()
     {
+        int edgeCount = 0;
+        for (Vertex vertex : networkFlow.getVertices())
+        {
+            for (Edge edge : vertex.getAdjacentEdges())
 
+                if (edge.getVertexTwo() > edge.getVertexOne())
+                {
+                    edgeCount ++;
+                    System.out.println(edgeCount + " { " + edge + " } ");
+                }
+        }
     }
 }

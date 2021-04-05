@@ -240,6 +240,7 @@ public class NetworkFlow
     public String toString() {
         return "\nSource: " + source +
                 " | Target: " + target +
-                " | Number Of Nodes: " + numberOfNodes;
+                " | Number Of Nodes: " + numberOfNodes +
+                " | Adjacency List: " + Arrays.toString(vertices);
     }
 }

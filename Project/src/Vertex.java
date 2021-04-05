@@ -8,14 +8,6 @@ public class Vertex
     private boolean[] visitedEdges;
     private List<Edge> adjacentEdges;
 
-    public Vertex(int vertexName, int numberOfAdjacentEdges)
-    {
-        this.vertexName = vertexName;
-        visitedEdges = new boolean[numberOfAdjacentEdges];
-        Arrays.fill(visitedEdges, false);
-        this.adjacentEdges = new ArrayList<>();
-    }
-
     public Vertex(int vertexName)
     {
         this.vertexName = vertexName;
@@ -44,5 +36,24 @@ public class Vertex
 
     public void setAdjacentEdges(List<Edge> adjacentEdges) {
         this.adjacentEdges = adjacentEdges;
+    }
+
+    public boolean removeEdge(Edge edgeToRemove)
+    {
+        if ( adjacentEdges.contains(edgeToRemove) )
+        {
+            adjacentEdges.remove(edgeToRemove);
+            visitedEdges = new boolean[adjacentEdges.size()];
+            Arrays.fill(visitedEdges, false);
+            return true;
+        }
+
+        return false;
+    }
+
+
+    @Override
+    public String toString() {
+        return "\nVertex: " + vertexName + " | Adjacent Edges: " + adjacentEdges;
     }
 }
