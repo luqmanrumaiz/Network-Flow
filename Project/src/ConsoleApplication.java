@@ -63,7 +63,7 @@ public class ConsoleApplication
                     case 2 -> findMaxFlow();
                     case 3 -> insertEdge();
                     case 4 -> deleteEdge();
-                    case 5 -> editFlowCapacity();
+                    case 5 -> editEdgeCapacity();
                     case 6 -> viewNetworkFlow();
                     case 7 ->
                     {
@@ -172,8 +172,6 @@ public class ConsoleApplication
      */
     private static void deleteEdge()
     {
-        int edgeCount = 0;
-
         System.out.print("\nVertex One in Edge to Delete: ");
         String vertexOneInEdge = INPUT.next();
 
@@ -193,7 +191,7 @@ public class ConsoleApplication
             // Printing Error Message if Option is not in range of the available options
             if ( ( vertexOne < networkFlow.getSource() ) || ( vertexTwo > networkFlow.getTarget() ) )
 
-                System.out.println("\nThe Option you have entered is Invalid !!!");
+                System.out.println("\nThe Edge you have given is Invalid !!!");
 
             else
             {
@@ -209,15 +207,15 @@ public class ConsoleApplication
                         if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
 
                             if (vertex.removeEdge(edge))
-
+                            {
                                 edgeRemoved = true;
+                                System.out.println("\nThe Edge has been Successfully removed !");
+                                break;
+                            }
                     }
                 }
 
-                if (edgeRemoved)
-
-                    System.out.println("\nThe Edge has been Successfully removed !");
-                else
+                if (! edgeRemoved)
 
                     System.out.println("\nThe Edge was not Found !!! ");
             }
@@ -227,13 +225,74 @@ public class ConsoleApplication
         {
             System.out.println("\nYou have not entered a Number !!!");
         }
-
-
     }
 
-    private static void editFlowCapacity()
+    /**
+     * This Method edits the Capacity of an Edge in other words you can alter the maximum amount of flow an Edge can handle
+     */
+    private static void editEdgeCapacity()
     {
+        System.out.print("\nVertex One in Edge to Modify: ");
+        String vertexOneInEdge = INPUT.next();
 
+        System.out.print("Vertex Two in Edge to Modify: ");
+        String vertexTwoInEdge = INPUT.next();
+
+        System.out.print("Updated Capacity: ");
+        String updatedCapacity = INPUT.next();
+
+        int vertexOne;
+        int vertexTwo;
+        int capacity;
+
+        // Try Catch Block inorder to Validate Input that is not an Integer
+        try
+        {
+            vertexOne = Integer.parseInt(vertexOneInEdge);
+            vertexTwo = Integer.parseInt(vertexTwoInEdge);
+            capacity = Integer.parseInt(updatedCapacity);
+
+            // Printing Error Message if Option is not in range of the available options
+            if ( ( vertexOne < networkFlow.getSource() ) || ( vertexTwo > networkFlow.getTarget() ) )
+
+                System.out.println("\nThe Edge you have given is Invalid !!!");
+
+            else if (capacity < 1)
+
+                System.out.println("\nThe Capacity you have given is less than 1 !!! ");
+
+            else
+            {
+                boolean edgeEdited = false;
+
+                for (Vertex vertex : networkFlow.getVertices())
+                {
+                    // Not Using an Enhanced For Loop as when an Edge is removed an error occurs, this was not faced in an Iteration Loop
+                    for (int adjacentEdgeCount = 0; adjacentEdgeCount < vertex.getAdjacentEdges().size() ; adjacentEdgeCount ++) {
+
+                        Edge edge = vertex.getAdjacentEdges().get(adjacentEdgeCount);
+
+                        if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
+
+                            if (vertex.editEdge(edge, capacity))
+                            {
+                                edgeEdited = true;
+                                System.out.println("\nThe Edge has been Successfully edited !");
+                                break;
+                            }
+                    }
+                }
+
+                if (! edgeEdited)
+
+                    System.out.println("\nThe Edge was not Found !!! ");
+            }
+
+        }
+        catch (Exception exception)
+        {
+            System.out.println("\nYou have not entered a Number !!!");
+        }
     }
 
     /**
