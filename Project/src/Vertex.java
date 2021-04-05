@@ -8,11 +8,14 @@ public class Vertex
     private boolean[] visitedEdges;
     private List<Edge> adjacentEdges;
 
+    // Constructor for the Vertex Class
     public Vertex(int vertexName)
     {
         this.vertexName = vertexName;
         this.adjacentEdges = new ArrayList<>();
     }
+
+    // Getters and Setters for the Vertex Class
 
     public boolean[] getVisitedEdges() {
         return visitedEdges;
@@ -38,40 +41,52 @@ public class Vertex
         this.adjacentEdges = adjacentEdges;
     }
 
-    public boolean removeEdge(Edge edgeToRemove)
+    /**
+     * This Method is used to remove an Edge from the Adjacent Edges in this Vertex
+     *
+     * @param edgeToRemove The Edge that has to be removed
+     */
+    public void removeEdge(Edge edgeToRemove)
     {
-        if ( adjacentEdges.contains(edgeToRemove) )
-        {
-            adjacentEdges.remove(edgeToRemove.getReversedEdge());
-            adjacentEdges.remove(edgeToRemove);
+        adjacentEdges.remove(edgeToRemove.getReversedEdge());
+        adjacentEdges.remove(edgeToRemove);
 
-            visitedEdges = new boolean[adjacentEdges.size()];
-            Arrays.fill(visitedEdges, false);
-
-            return true;
-        }
-
-        return false;
+        // Increasing the size of the Visited Edges Array as there is a change in the size of the Adjacent Edges
+        visitedEdges = new boolean[adjacentEdges.size()];
+        Arrays.fill(visitedEdges, false);
     }
 
-    public boolean editEdge(Edge edgeToModify, int newCapacity)
+    /**
+     * This Method is used to change the Capacity of the Edges of the Adjacent Edges in this Vertex
+     *
+     * @param edgeToModify The Edge to be Edited
+     * @param newCapacity The Updated Capacity
+     */
+    public void editEdge(Edge edgeToModify, int newCapacity)
     {
-        if ( adjacentEdges.contains(edgeToModify) )
-        {
-            int index = adjacentEdges.indexOf(edgeToModify);
+        int index = adjacentEdges.indexOf(edgeToModify);
 
-            edgeToModify.setCapacity(newCapacity);
-            adjacentEdges.set(index, edgeToModify);
-
-            return true;
-        }
-
-        return false;
+        edgeToModify.setCapacity(newCapacity);
+        adjacentEdges.set(index, edgeToModify);
     }
 
+    /**
+     * This Method is used to add a new Adjacent Edge
+     *
+     * @param edgeToInsert The new Adjacent Edge
+     */
+    public void insertEdge(Edge edgeToInsert)
+    {
+        adjacentEdges.add(edgeToInsert);
+
+        // Increasing the size of the Visited Edges Array as there is a change in the size of the Adjacent Edges
+        visitedEdges = new boolean[adjacentEdges.size()];
+        Arrays.fill(visitedEdges, false);
+    }
 
     @Override
-    public String toString() {
+    public String toString()
+    {
         return "\nVertex: " + vertexName + " | Adjacent Edges: " + adjacentEdges;
     }
 }

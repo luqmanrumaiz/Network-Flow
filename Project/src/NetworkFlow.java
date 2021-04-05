@@ -22,7 +22,7 @@ public class NetworkFlow
         this.vertices = new Vertex[numberOfNodes];
     }
 
-    // Getters and Setters for Network Flow
+    // Getters and Setters for the Network Flow Class
 
     public int getSource()
     {

@@ -6,6 +6,7 @@ public class Edge
     private int flow;
     private Edge reversedEdge;
 
+    // Constructor for the Edge Class
     public Edge(int vertexOne, int vertexTwo, int capacity)
     {
         this.vertexOne = vertexOne;
@@ -14,14 +15,7 @@ public class Edge
         flow = 0;
     }
 
-    public Edge(int vertexOne, int vertexTwo, int capacity, int flow, Edge reversedEdge)
-    {
-        this.vertexOne = vertexOne;
-        this.vertexTwo = vertexTwo;
-        this.capacity = capacity;
-        this.flow = flow;
-        this.reversedEdge = reversedEdge;
-    }
+    // Getters and Setters for the Edge Class
 
     public int getVertexOne()
     {

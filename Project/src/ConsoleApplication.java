@@ -162,9 +162,79 @@ public class ConsoleApplication
         }
     }
 
+    /**
+     * This Method can be used by the User to insert an Edge to the Network Flow to any of the existing Vertices
+     */
     private static void insertEdge()
     {
 
+        System.out.print("\nVertex One in Edge to Insert: ");
+        String vertexOneInEdge = INPUT.next();
+
+        System.out.print("Vertex Two in Edge to Insert: ");
+        String vertexTwoInEdge = INPUT.next();
+
+        System.out.print("Capacity of Edge to Insert: ");
+        String capacityInEdge = INPUT.next();
+
+        int vertexOne;
+        int vertexTwo;
+        int capacity;
+
+        // Try Catch Block inorder to Validate Input that is not an Integer
+        try
+        {
+            vertexOne = Integer.parseInt(vertexOneInEdge);
+            vertexTwo = Integer.parseInt(vertexTwoInEdge);
+            capacity = Integer.parseInt(capacityInEdge);
+
+            // Printing Error Message if Option is not in range of the available options
+            if ( ( vertexOne < networkFlow.getSource() ) || ( vertexTwo > networkFlow.getTarget() ) )
+
+                System.out.println("\nThe Edge you have given is Invalid !!!");
+
+            else if ( vertexOne > vertexTwo )
+
+                System.out.println("\nYou cannot Insert an Inverted Edge !!!");
+
+            else if (capacity < 1)
+
+                System.out.println("\nThe Capacity you have given is less than 1 !!! ");
+
+            else
+            {
+                boolean edgeExists = false;
+
+                for (Vertex vertex : networkFlow.getVertices())
+                {
+                    // Not Using an Enhanced For Loop as when an Edge is removed an error occurs, this was not faced in an Iteration Loop
+                    for (int adjacentEdgeCount = 0; adjacentEdgeCount < vertex.getAdjacentEdges().size() ; adjacentEdgeCount ++) {
+
+                        Edge edge = vertex.getAdjacentEdges().get(adjacentEdgeCount);
+
+                        if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
+                        {
+                            edgeExists = true;
+                            System.out.println("\nThe Edge already exists !!!");
+                            break;
+                        }
+                    }
+                }
+
+                if (! edgeExists)
+                {
+                    Vertex[] vertices = networkFlow.getVertices();
+                    vertices[vertexOne].insertEdge(new Edge(vertexOne, vertexTwo, capacity));
+
+                    System.out.println("\nThe Edge was Successfully Inserted !!! ");
+                }
+            }
+
+        }
+        catch (Exception exception)
+        {
+            System.out.println("\nYou have not entered a Number !!!");
+        }
     }
 
     /**
@@ -205,13 +275,12 @@ public class ConsoleApplication
                         Edge edge = vertex.getAdjacentEdges().get(adjacentEdgeCount);
 
                         if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
-
-                            if (vertex.removeEdge(edge))
-                            {
-                                edgeRemoved = true;
-                                System.out.println("\nThe Edge has been Successfully removed !");
-                                break;
-                            }
+                        {
+                            vertex.removeEdge(edge);
+                            edgeRemoved = true;
+                            System.out.println("\nThe Edge has been Successfully removed !");
+                            break;
+                        }
                     }
                 }
 
@@ -273,13 +342,12 @@ public class ConsoleApplication
                         Edge edge = vertex.getAdjacentEdges().get(adjacentEdgeCount);
 
                         if ( ( ( edge.getVertexOne() == vertexOne ) && ( edge.getVertexTwo() == vertexTwo ) ) )
-
-                            if (vertex.editEdge(edge, capacity))
-                            {
-                                edgeEdited = true;
-                                System.out.println("\nThe Edge has been Successfully edited !");
-                                break;
-                            }
+                        {
+                            vertex.editEdge(edge, capacity);
+                            edgeEdited = true;
+                            System.out.println("\nThe Edge has been Successfully edited !");
+                            break;
+                        }
                     }
                 }
 
@@ -311,7 +379,10 @@ public class ConsoleApplication
         System.out.println("Time Elapsed: " + (timeEnd - timeStart) + " ns");
     }
 
-
+    /**
+     * This Method can be used for the User to view all the Edges in the Network Flow for all Vertexes in order without
+     * Reversed Edges
+     */
     private static void viewNetworkFlow()
     {
         int edgeCount = 0;
