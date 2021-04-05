@@ -1,5 +1,8 @@
-import java.io.*;
-import java.util.*;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.util.Arrays;
+import java.util.Scanner;
 
 public class ConsoleApplication
 {
@@ -15,11 +18,11 @@ public class ConsoleApplication
         {
             System.out.print(
                     "\nHere below are the Options you can Execute,\n" +
-                            "01: Initialize the Flow\n" +
-                            "02: Insert a Flow\n" +
-                            "03: Find the Maximum Flow\n" +
-                            "04: Delete a Flow\n" +
-                            "05: Edit the Capacity of a Flow\n" +
+                            "01: Initialize the Network Flow\n" +
+                            "02: Find the Maximum Flow\n" +
+                            "03: Insert an Edge\n" +
+                            "04: Delete an Edge\n" +
+                            "05: Edit the Capacity of an Edge\n" +
                             "06: View the Network Flow\n" +
                             "07: Quit Program\n\n" +
                             "Desired Option: ");
@@ -52,34 +55,26 @@ public class ConsoleApplication
 
                 initializeFlow();
 
-            if (option == 2 && networkFlow != null)
-
-                insertFlow();
-
             else if (networkFlow != null)
             {
                 // Enhanced Switch Case Block that calls the respective Method based on the given Option
                 switch (option)
                 {
-                    case 3 -> findMaxFlow();
-                    case 4 -> deleteFlow();
+                    case 2 -> findMaxFlow();
+                    case 3 -> insertEdge();
+                    case 4 -> deleteEdge();
                     case 5 -> editFlowCapacity();
                     case 6 -> viewNetworkFlow();
-                    case 7 -> {
+                    case 7 ->
+                    {
                         System.out.println("Thank You for using the Network Flow Application !");
                         run = false;
                     }
                 }
             }
-            else if (networkFlow == null)
+            else
 
                 System.out.println("The Network Flow has not been Initialized !!!");
-
-            else if (networkFlow.getEdges().length == 0)
-
-                System.out.println("There are no Flows to Delete in the Network Flow");
-
-
 
             System.out.println("\n-------------------------------------------------------------------------------");
         }
@@ -128,29 +123,46 @@ public class ConsoleApplication
             return;
         }
 
+        Arrays.sort(files);
+
         FileReader fileReader = new FileReader(files[option]);
         Scanner scanner = new Scanner(fileReader);
 
         int numberOfNodes = Integer.parseInt(scanner.next());
 
+        // The Source is the first Vertex of the first Edge and the Target is the second vertex of the last Edge
+        networkFlow = new NetworkFlow(0, numberOfNodes - 1, numberOfNodes);
+
+        networkFlow.setVertices(new Vertex[numberOfNodes]);
+
+        for (int vertexCount = 0; vertexCount < numberOfNodes; vertexCount++)
+        {
+            Vertex vertex = new Vertex(vertexCount);
+
+            Vertex[] vertices = networkFlow.getVertices();
+            vertices[vertexCount] = vertex;
+
+            networkFlow.setVertices(vertices);
+        }
+
         /* Using an ArrayList to keep adding all 3 Attributes required by the Flow Object in the file. This is done
          * by using the hasNext() Method of the Scanner Object that allows us to read data using the next() method
          * till there is nothing left
          */
-        ArrayList<Edge> edges = new ArrayList<>();
-
         while (scanner.hasNext())
+        {
+            networkFlow.addEdgeToAdjacencyList(Integer.parseInt(scanner.next()), Integer.parseInt((scanner.next())),
+                    Integer.parseInt(scanner.next()));
+        }
 
-            edges.add(new Edge(new Vertex(scanner.next()), new Vertex(scanner.next()), Integer.parseInt(scanner.next())));
+        for (Vertex vertex : networkFlow.getVertices()) {
+            boolean[] visitedEdges = new boolean[vertex.getAdjacentEdges().size()];
 
-        // The Source is the first Vertex of the first Edge and the Target is the second vertex of the last Edge
-        networkFlow = new NetworkFlow(edges.get(0).getVertexOne().getVertexName(),
-                edges.get(numberOfNodes - 1).getVertexTwo().getVertexName(), numberOfNodes, edges.toArray(new Edge[0]));
-
-        System.out.println(networkFlow);
+            vertex.setVisitedEdges(visitedEdges);
+        }
     }
 
-    private static void insertFlow()
+    private static void insertEdge()
     {
 
     }
@@ -158,24 +170,33 @@ public class ConsoleApplication
     /**
      * This Method deletes a Flow from a Network based on User Input
      */
-    private static void deleteFlow()
+    private static void deleteEdge()
     {
-
-    }
-
-    private static void searchFlow()
-    {
-
+        System.out.print(" ");
     }
 
     private static void editFlowCapacity()
     {
+
     }
 
+    /**
+     * This Method uses the getMaxFlow() Method from the NetworkFlow Object to find the Maximum Flow of the Network
+     * Flow, and in addition to this the Elapsed Time is shown in Nano Seconds
+     */
     private static void findMaxFlow()
     {
+        long timeStart = System.nanoTime();
+
+        System.out.println("Maximum Flow: " + networkFlow.getMaxFlow());
+
+        long timeEnd = System.nanoTime();
+
+        // Subtracting the Time recorded at the start of executing this method with the time recorded after executing
+        System.out.println("Time Elapsed: " + (timeEnd - timeStart) + " ns");
 
     }
+
 
     private static void viewNetworkFlow()
     {

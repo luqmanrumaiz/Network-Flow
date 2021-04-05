@@ -1,14 +1,12 @@
-import java.util.Objects;
-
 public class Edge
 {
-
-    private Vertex vertexOne;
-    private Vertex vertexTwo;
+    private int vertexOne;
+    private int vertexTwo;
     private int capacity;
     private int flow;
+    private Edge reversedEdge;
 
-    public Edge(Vertex vertexOne, Vertex vertexTwo, int capacity)
+    public Edge(int vertexOne, int vertexTwo, int capacity)
     {
         this.vertexOne = vertexOne;
         this.vertexTwo = vertexTwo;
@@ -16,30 +14,31 @@ public class Edge
         flow = 0;
     }
 
-    public Edge(Vertex vertexOne, Vertex vertexTwo, int capacity, int flow)
+    public Edge(int vertexOne, int vertexTwo, int capacity, int flow, Edge reversedEdge)
     {
         this.vertexOne = vertexOne;
         this.vertexTwo = vertexTwo;
         this.capacity = capacity;
         this.flow = flow;
+        this.reversedEdge = reversedEdge;
     }
 
-    public Vertex getVertexOne()
+    public int getVertexOne()
     {
         return vertexOne;
     }
 
-    public void setVertexOne(Vertex vertexOne)
+    public void setVertexOne(int vertexOne)
     {
         this.vertexOne = vertexOne;
     }
 
-    public Vertex getVertexTwo()
+    public int getVertexTwo()
     {
         return vertexTwo;
     }
 
-    public void setVertexTwo(Vertex vertexTwo)
+    public void setVertexTwo(int vertexTwo)
     {
         this.vertexTwo = vertexTwo;
     }
@@ -64,43 +63,31 @@ public class Edge
         this.flow = flow;
     }
 
-    public boolean isEmpty()
+    public Edge getReversedEdge()
     {
-        return flow < capacity;
+        return reversedEdge;
     }
 
-    /* If the equals method returns true when comparing two Objects that are equal, then the hashcode() method is called to use a Hash Algorithm on the Current Object
-     * and then the other Object, an Integer is returned and if both Objects are equal they will have the same Integer value that is returned*/
-    @Override
-    public int hashCode()
+    public void setReversedEdge(Edge reversedEdge)
     {
-        return Objects.hash(getVertexOne(), getVertexTwo(), getFlow(), getCapacity());
+        this.reversedEdge = reversedEdge;
     }
 
-    @Override
-    public boolean equals(Object object)
+    /**
+     * This Method returns the Residual Capacity of an Edge, in others the Capacity of Flow that an Edge can receive.
+     *
+     * @return The Residual Capacity
+     */
+    public int getResidualCapacity()
     {
-
-        // checking if both the object references are
-        // referring to the same object.
-        if(this == object)
-            return true;
-
-        if(object == null || object.getClass()!= this.getClass())
-            return false;
-
-        // type casting of the argument.
-        Edge edge = (Edge) object;
-
-        // comparing the state of argument with
-        // the state of 'this' Object.
-        return (edge.vertexOne == this.vertexOne && edge.vertexTwo == this.vertexTwo && edge.flow == this.flow
-                && edge.capacity == this.capacity);
+        return capacity - flow;
     }
 
     @Override
-    public String toString() {
-        return "\n" + capacity+ " (" + vertexOne.getVertexName() + ", " + vertexTwo.getVertexName() + ")";
+    public String toString()
+    {
+        return "\n" + vertexOne + " ~> " + vertexTwo +
+                " | , Capacity=" + capacity +
+                " |, Flow=" + flow;
     }
-
 }
