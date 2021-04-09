@@ -1,8 +1,3 @@
-/**
- * Luqman Rumaiz
- * w1761767
- */
-
 public class Edge
 {
     private int vertexOne;

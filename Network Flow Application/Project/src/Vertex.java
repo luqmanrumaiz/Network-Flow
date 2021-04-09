@@ -1,8 +1,3 @@
-/**
- * Luqman Rumaiz
- * w1761767
- */
-
 import java.util.ArrayList;
 import java.util.List;
 

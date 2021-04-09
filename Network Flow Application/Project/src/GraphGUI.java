@@ -1,9 +1,3 @@
-/**
- * Name - Luqman Rumaiz
- * IIT ID - 2018130
- * UOW ID - W1761767
- */
-
 import org.graphstream.graph.*;
 import org.graphstream.graph.implementations.*;
 import org.graphstream.ui.view.Viewer;
