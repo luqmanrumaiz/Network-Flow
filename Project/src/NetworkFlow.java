@@ -1,14 +1,30 @@
-import java.util.ArrayDeque;
-import java.util.Arrays;
-import java.util.Deque;
-import java.util.List;
+/**
+ * Luqman Rumaiz
+ * w1761767
+ */
+
+import java.util.*;
 
 public class NetworkFlow
 {
+    /*
+     * References
+     * ---------
+     * https://www.github.com/williamfiset/Algorithms/tree/master/src/main/java/com/williamfiset/algorithms/graphtheory/networkflow/examples
+     * https://www.geeksforgeeks.org/dinics-algorithm-maximum-flow/
+     */
     private int source;
     private int target;
     private int numberOfNodes;
+    private int maxFlow;
     private int[] levelGraph;
+
+    /* If you look at the first Constructor this Array is initialized with a size equals to the Number of Nodes,
+     * the reason behind this is because for each Vertex we will store the total number of Adjacent Edges visited.
+     * Instead of using a boolean Array with the size of the Adjacent Edge for each Vertex this is more efficient
+     * as only 01 Array is required
+     */
+    private int[] adjacentEdgesVisited;
 
     // This is essentially the Adjacency List as the Adjacent Edges are a property of the Vertex Object
     private Vertex[] vertices;
@@ -20,6 +36,8 @@ public class NetworkFlow
         this.target = target;
         this.numberOfNodes = numberOfNodes;
         this.vertices = new Vertex[numberOfNodes];
+        this.adjacentEdgesVisited = new int[numberOfNodes];
+        maxFlow = -1;
     }
 
     // Getters and Setters for the Network Flow Class
@@ -72,6 +90,22 @@ public class NetworkFlow
         this.vertices = vertices;
     }
 
+    public int getMaxFlow() {
+        return maxFlow;
+    }
+
+    public void setMaxFlow(int maxFlow) {
+        this.maxFlow = maxFlow;
+    }
+
+    public int[] getAdjacentEdgesVisited() {
+        return adjacentEdgesVisited;
+    }
+
+    public void setAdjacentEdgesVisited(int[] adjacentEdgesVisited) {
+        this.adjacentEdgesVisited = adjacentEdgesVisited;
+    }
+
     /**
      * This Method is used to create an Edge and a Reverse Edge correspondent to this Edge, where both Edges are added
      * to the Adjacency List. The Reason why a Reverse Edge is made is because ...
@@ -111,6 +145,9 @@ public class NetworkFlow
         // -1 Indicates that the Node has not been visited in the Level Graph any number lower than the Source can be used to fill the Array
         Arrays.fill(levelGraph, -1);
 
+        adjacentEdgesVisited = new int[numberOfNodes];
+        Arrays.fill(adjacentEdgesVisited, 0);
+
         // Visiting the first Vertex in the Network Flow therefore setting the Level of the Source to 0 as it is the first Vertex in the Level Graph
         levelGraph[source]  = 0;
 
@@ -138,6 +175,8 @@ public class NetworkFlow
             }
         }
 
+        System.out.println("\nLevel Graph: " + Arrays.toString(levelGraph));
+
         return levelGraph[target] != -1;
     }
 
@@ -154,81 +193,88 @@ public class NetworkFlow
     {
         // If the Target is reached we must return the flow
         if (vertex == target)
-
+        {
+            System.out.print(target);
             return flow;
-
-        int edgeCount = 0;
-
+        }
         // Going through all visited Edges and selected unvisited Edges
 
-        for ( boolean edgeVisited : vertices[vertex].getVisitedEdges() )
+        for ( ; adjacentEdgesVisited[vertex] < vertices[vertex].getAdjacentEdges().size(); adjacentEdgesVisited[vertex] ++ )
         {
-            if (! edgeVisited)
+            Edge edge = vertices[vertex].getAdjacentEdges().get(adjacentEdgesVisited[vertex]);
+
+            /* In order to include an Edge in a Path it must have space to carry more Flow (Residual Capacity
+             * is the Capacity minus the Flow so the remaining Flow) and the Level of second Vertex has to be
+             * greater than the Level of the Parent Vertex according to the Dinic's Algorithm a Path cannot include
+             * a Flow from an Edge on the Same Level or Lower */
+            if ( (edge.getResidualCapacity() > 0 ) && ( levelGraph[edge.getVertexTwo()] > levelGraph[vertex] ) )
             {
-                Edge edge = vertices[vertex].getAdjacentEdges().get(edgeCount);
+                /* Here we Recursively call DFS method and augment a Path till Target is reached thereby each time
+                 * we get the returned Bottle Neck Factor */
 
-                /* In order to include an Edge in a Path it must have space to carry more Flow (Residual Capacity
-                 * is the Capacity minus the Flow so the remaining Flow) and the Level of second Vertex has to be
-                 * greater than the Level of the Parent Vertex according to the Dinic's Algorithm a Path cannot include
-                 * a Flow from an Edge on the Same Level or Lower */
-                if ( (edge.getResidualCapacity() > 0 ) && ( levelGraph[edge.getVertexTwo()] > levelGraph[vertex] ) )
+                int bottleneckFlow = augmentPath(edge.getVertexTwo(), Math.min(flow, edge.getResidualCapacity()));
+
+                // Adding the Flow to the edge and reduced the Flow to the reverse Edge if the bottleneck Flow allows more than at least 1 or more Flow
+                if (bottleneckFlow > 0)
                 {
-                    /* Here we Recursively call DFS method and augment a Path till Target is reached thereby each time
-                     * we get the returned Bottle Neck Factor */
+                    edge.setFlow(edge.getFlow() + bottleneckFlow);
 
-                    int bottleneckFlow = augmentPath(edge.getVertexTwo(), Math.min(flow, edge.getResidualCapacity()));
+                    Edge reversedEdge = edge.getReversedEdge();
+                    reversedEdge.setFlow(reversedEdge.getFlow() - bottleneckFlow);
 
-                    if (bottleneckFlow > 0)
-                    {
-                        edge.setFlow(edge.getFlow() + bottleneckFlow);
-                        Edge reversedEdge = edge.getReversedEdge();
-                        reversedEdge.setFlow(reversedEdge.getFlow() - bottleneckFlow);
+                    edge.setReversedEdge(reversedEdge);
+                    reversedEdge.setReversedEdge(edge);
 
-                        return bottleneckFlow;
-                    }
+                    System.out.print( " <- " + vertex);
+
+                    return bottleneckFlow;
                 }
-
-                // We now make the Edge Visited
-                vertices[vertex].getVisitedEdges()[edgeCount] = true;
-
             }
-
-            edgeCount++;
         }
 
         return 0;
     }
 
     /**
-     * Level Graph -
-     *
      *
      * This Method Implements the Dinic's Algorithm to find the Maximum Flow of the Network Flow. Here is a brief
      * explanation on how it works, first a Level Graph is constructed using BFS (Breadth First Search)
      *
      * @return The Max Flow
      */
-    public int getMaxFlow()
+    public int findMaxFlow()
     {
+        long timeStart = System.nanoTime();
+
         int maxFlow = 0;
+        int paths = 0;
 
         while (constructNetworkGraph())
         {
             /* Trying to Augment as many Paths as possible till the flow is not 0 meaning for the specific
              * Construct of the Level Graph all Edges have been visited. This is done using DFS the parameters are
              * self explanatory but the reason why we first Augment a Path with a Flow equals to Infinity is because
-             *
+             * the Source of course can provide an Infinite amount of Flow.
              */
             for(long flow = augmentPath(source, (int) Double.POSITIVE_INFINITY); flow != 0;
-                     flow = augmentPath(source, (int) Double.POSITIVE_INFINITY))
-
+                flow = augmentPath(source, (int) Double.POSITIVE_INFINITY))
+            {
+                paths ++;
+                System.out.println(" ~ Bottleneck Flow: " + flow);
                 //Maximum flow will get increased by adding up every 'bottleNeck' value(f) [when path from s to t is found.]
                 maxFlow += flow;
+            }
         }
+
+        long timeEnd = System.nanoTime();
+
+        // Subtracting the Time recorded at the start of executing this method with the time recorded after executing
+        System.out.println("\nTime Elapsed: " + (timeEnd - timeStart) + " ns");
+        System.out.println("Augmented Paths: " + paths);
+        this.maxFlow = maxFlow;
 
         return maxFlow;
     }
-
 
     /**
      * This Overridden Method is called when the NetworkFlow Object is printed, but usually the Object's reference is printed.

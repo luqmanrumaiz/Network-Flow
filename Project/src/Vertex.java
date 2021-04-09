@@ -1,11 +1,14 @@
+/**
+ * Luqman Rumaiz
+ * w1761767
+ */
+
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Vertex
 {
     private int vertexName;
-    private boolean[] visitedEdges;
     private List<Edge> adjacentEdges;
 
     // Constructor for the Vertex Class
@@ -16,14 +19,6 @@ public class Vertex
     }
 
     // Getters and Setters for the Vertex Class
-
-    public boolean[] getVisitedEdges() {
-        return visitedEdges;
-    }
-
-    public void setVisitedEdges(boolean[] visitedEdges) {
-        this.visitedEdges = visitedEdges;
-    }
 
     public int getVertexName() {
         return vertexName;
@@ -50,10 +45,6 @@ public class Vertex
     {
         adjacentEdges.remove(edgeToRemove.getReversedEdge());
         adjacentEdges.remove(edgeToRemove);
-
-        // Increasing the size of the Visited Edges Array as there is a change in the size of the Adjacent Edges
-        visitedEdges = new boolean[adjacentEdges.size()];
-        Arrays.fill(visitedEdges, false);
     }
 
     /**
@@ -78,10 +69,6 @@ public class Vertex
     public void insertEdge(Edge edgeToInsert)
     {
         adjacentEdges.add(edgeToInsert);
-
-        // Increasing the size of the Visited Edges Array as there is a change in the size of the Adjacent Edges
-        visitedEdges = new boolean[adjacentEdges.size()];
-        Arrays.fill(visitedEdges, false);
     }
 
     @Override

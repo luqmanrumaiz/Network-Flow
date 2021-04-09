@@ -1,3 +1,8 @@
+/**
+ * Luqman Rumaiz
+ * w1761767
+ */
+
 public class Edge
 {
     private int vertexOne;
@@ -13,6 +18,14 @@ public class Edge
         this.vertexTwo = vertexTwo;
         this.capacity = capacity;
         flow = 0;
+    }
+
+    public Edge(int vertexOne, int vertexTwo, int capacity, int flow)
+    {
+        this.vertexOne = vertexOne;
+        this.vertexTwo = vertexTwo;
+        this.capacity = capacity;
+        this.flow = flow;
     }
 
     // Getters and Setters for the Edge Class
@@ -80,6 +93,6 @@ public class Edge
     @Override
     public String toString()
     {
-        return vertexOne + " ~> " + vertexTwo + " | Capacity=" + capacity + " | Flow=" + flow;
+        return "{ " + vertexOne + " ~> " + vertexTwo + " | Capacity=" + capacity + " | Flow=" + flow + " }";
     }
 }

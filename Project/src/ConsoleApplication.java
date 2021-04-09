@@ -1,3 +1,8 @@
+/**
+ * Luqman Rumaiz
+ * w1761767
+ */
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -13,6 +18,7 @@ public class ConsoleApplication
     {
         System.out.println("0oo - Welcome to the Network Flow Application - ooO");
 
+        // When Option to Quit Program is selected run will be set to false thus ending the Loop
         boolean run = true;
         while (run)
         {
@@ -23,8 +29,9 @@ public class ConsoleApplication
                             "03: Insert an Edge\n" +
                             "04: Delete an Edge\n" +
                             "05: Edit the Capacity of an Edge\n" +
-                            "06: View the Network Flow\n" +
-                            "07: Quit Program\n\n" +
+                            "06: View the Network Flow (CLI)\n" +
+                            "07: View the Network Flow (GUI)\n" +
+                            "08: Quit Program\n\n" +
                             "Desired Option: ");
 
             String selectedOption = INPUT.next();
@@ -36,7 +43,7 @@ public class ConsoleApplication
                 option = Integer.parseInt(selectedOption);
 
                 // Printing Error Message if Option is not in range of the available options
-                if (option < 1 || option > 7)
+                if (option < 1 || option > 8)
                 {
                     System.out.println("\nThe Option you have entered is Invalid !!!");
                     continue;
@@ -55,21 +62,46 @@ public class ConsoleApplication
 
                 initializeFlow();
 
+            else if (option == 8)
+            {
+                System.out.println("Thank You for using the Network Flow Application !");
+                run = false;
+                break;
+            }
             else if (networkFlow != null)
             {
-                // Enhanced Switch Case Block that calls the respective Method based on the given Option
+                // Switch Case Block that calls the respective Method based on the given Option
                 switch (option)
                 {
-                    case 2 -> findMaxFlow();
-                    case 3 -> insertEdge();
-                    case 4 -> deleteEdge();
-                    case 5 -> editEdgeCapacity();
-                    case 6 -> viewNetworkFlow();
-                    case 7 ->
-                    {
-                        System.out.println("Thank You for using the Network Flow Application !");
-                        run = false;
-                    }
+                    case 2:
+
+                        findMaxFlow();
+                        break;
+
+                    case 3:
+
+                        insertEdge();
+                        break;
+
+                    case 4:
+
+                        deleteEdge();
+                        break;
+
+                    case 5:
+
+                        editEdgeCapacity();
+                        break;
+
+                    case 6:
+
+                        viewNetworkFlowCLI();
+                        break;
+
+                    case 7:
+
+                        viewNetworkFlowGUI();
+                        break;
                 }
             }
             else
@@ -97,9 +129,9 @@ public class ConsoleApplication
 
         System.out.println();
 
-        for ( int count = 1; count < files.length; count ++ )
+        for ( int count = 0; count < files.length; count ++ )
 
-            System.out.println(files[count].getName() + "<~" + count);
+            System.out.println(files[count].getName() + "<~" + (count + 1));
 
         System.out.print("\nFile to be Loaded: ");
         String selectedOption = INPUT.next();
@@ -111,7 +143,7 @@ public class ConsoleApplication
             option = Integer.parseInt(selectedOption);
 
             // Printing Error Message if Option is not in range of the available options
-            if ( ( option < 1 ) || ( option > ( files.length + 1 ) ) )
+            if ( ( option < 1 ) || ( option > ( files.length ) ) )
             {
                 System.out.println("\nThe Option you have entered is Invalid !!!");
                 return;
@@ -125,7 +157,7 @@ public class ConsoleApplication
 
         Arrays.sort(files);
 
-        FileReader fileReader = new FileReader(files[option]);
+        FileReader fileReader = new FileReader(files[option - 1]);
         Scanner scanner = new Scanner(fileReader);
 
         int numberOfNodes = Integer.parseInt(scanner.next());
@@ -153,12 +185,6 @@ public class ConsoleApplication
         {
             networkFlow.addEdgeToAdjacencyList(Integer.parseInt(scanner.next()), Integer.parseInt((scanner.next())),
                     Integer.parseInt(scanner.next()));
-        }
-
-        for (Vertex vertex : networkFlow.getVertices()) {
-            boolean[] visitedEdges = new boolean[vertex.getAdjacentEdges().size()];
-
-            vertex.setVisitedEdges(visitedEdges);
         }
     }
 
@@ -369,32 +395,59 @@ public class ConsoleApplication
      */
     private static void findMaxFlow()
     {
-        long timeStart = System.nanoTime();
+        // If the Max Flow is already found it will not be equals to its default value as it cannot be a Negative Number
+        if (networkFlow.getMaxFlow() == -1)
+        {
+            int maxFlow = networkFlow.findMaxFlow();
+            System.out.println("Maximum Flow: " + maxFlow);
+        }
+        else
 
-        System.out.println("\nMaximum Flow: " + networkFlow.getMaxFlow());
-
-        long timeEnd = System.nanoTime();
-
-        // Subtracting the Time recorded at the start of executing this method with the time recorded after executing
-        System.out.println("Time Elapsed: " + (timeEnd - timeStart) + " ns");
+            System.out.println("Maximum Flow: " + networkFlow.getMaxFlow());
     }
 
     /**
      * This Method can be used for the User to view all the Edges in the Network Flow for all Vertexes in order without
-     * Reversed Edges
+     * Reversed Edges in CLI
      */
-    private static void viewNetworkFlow()
+    private static void viewNetworkFlowCLI()
     {
         int edgeCount = 0;
         for (Vertex vertex : networkFlow.getVertices())
-        {
+
             for (Edge edge : vertex.getAdjacentEdges())
 
                 if (edge.getVertexTwo() > edge.getVertexOne())
                 {
                     edgeCount ++;
-                    System.out.println(edgeCount + " { " + edge + " } ");
+                    System.out.println(edgeCount + " " +  edge);
                 }
-        }
+
+    }
+
+    /**
+     * This Method can be used for the User to view all the Edges in the Network Flow for all Vertexes in order without
+     * Reversed Edges in GUI
+     */
+    private static void viewNetworkFlowGUI()
+    {
+        GraphGUI graphGUI = new GraphGUI();
+
+        // Adding all Vertices to the Graph GUI
+        for (Vertex vertex : networkFlow.getVertices())
+
+            graphGUI.addVertex(String.valueOf(vertex.getVertexName()));
+
+        // Adding all Edges to the Graph GUI
+        for (Vertex vertex : networkFlow.getVertices())
+
+            for (Edge edge : vertex.getAdjacentEdges())
+
+                if (edge.getVertexTwo() > edge.getVertexOne())
+
+                    graphGUI.addEdge(String.valueOf(edge.getVertexOne()), String.valueOf(edge.getVertexTwo())
+                            , edge.getCapacity(), edge.getFlow());
+
+        graphGUI.display();
     }
 }
