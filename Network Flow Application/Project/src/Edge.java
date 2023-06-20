@@ -76,7 +76,7 @@ public class Edge
     }
 
     /**
-     * This Method returns the Residual Capacity of an Edge, in others the Capacity of Flow that an Edge can receive.
+     * This Method returns the Residual Capacity of an Edge, in other words it is the Capacity of Flow that an Edge can receive.
      *
      * @return The Residual Capacity
      */
